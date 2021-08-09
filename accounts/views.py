@@ -47,7 +47,7 @@ class AccountLoginView(LoginView):
             return self.request.GET.get('next')
         return reverse('index')
 
-class AccountLogoutView(LoginView):
+class AccountLogoutView(LogoutView):
     template_name = 'accounts/logout.html'
 
 
