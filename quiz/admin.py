@@ -1,9 +1,10 @@
 from django.contrib import admin
 
-from .forms import ChoiceInlineFormSet, QuestionInlineFormSet
 from .models import Exam, Question, Choice, Result
+from .forms import ChoiceInlineFormSet, QuestionInlineFormSet
 
-class ChoiceInLine(admin.TabularInline):
+
+class ChoiceInline(admin.TabularInline):
     model = Choice
     fields = ('text', 'is_correct')
     show_change_link = True
@@ -12,7 +13,7 @@ class ChoiceInLine(admin.TabularInline):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    inlines = (ChoiceInLine,)
+    inlines = (ChoiceInline, )
 
 
 class QuestionInline(admin.TabularInline):
