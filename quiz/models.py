@@ -66,6 +66,7 @@ class Result(BaseModel):
 
         self.num_correct_answers += int(correct_answer)
         self.num_incorrect_answers += 1 - int(correct_answer)
+        self.current_order_number = order_number
 
         if order_number == question.exam.questions_count():
             self.state = self.STATE.FINISHED
@@ -85,3 +86,7 @@ class Result(BaseModel):
         else: ball = 0
 
         return  ball
+
+    def points(self):
+        # return max(0, self.num_correct_answers - self.num_incorrect_answers)
+        return self.num_correct_answers - self.num_incorrect_answers
