@@ -71,3 +71,17 @@ class Result(BaseModel):
             self.state = self.STATE.FINISHED
 
         self.save()
+
+    def time_of_test(self):
+        return self.update_timestamp - self.create_timestamp
+
+    def success_rate(self):
+        return (self.num_correct_answers / (self.num_incorrect_answers + self.num_correct_answers)) * 100
+
+    def balls(self):
+        ball = self.num_correct_answers - self.num_incorrect_answers
+        if ball > 0:
+            ball = ball
+        else: ball = 0
+
+        return  ball

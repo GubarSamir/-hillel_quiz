@@ -25,6 +25,16 @@ class QuestionInlineFormSet(BaseInlineFormSet):
                 self.instance.QUESTION_MAX_LIMIT
             ))
 
+        clean_order_num = [form.cleaned_data['order_num'] for form in self.forms]
+
+        if min(clean_order_num) != 1:
+            raise ValidationError('Numeration must start from 1')
+        if max(clean_order_num) != len(self.forms):
+            raise ValidationError('Maximal number mustn`t be more of count questions')
+        if len(clean_order_num) != len(set(clean_order_num)):
+            raise ValidationError('Falce numeration')
+
+
 
 class ChoiceForm(ModelForm):
     is_selected = forms.BooleanField(required=False)
