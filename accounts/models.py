@@ -16,5 +16,7 @@ class CustomUser(AbstractUser):
     class Meta(AbstractUser.Meta):
         pass
 
+
 class UserRaiting(ModelAdmin):
     readonly_fields = ['raiting']
+

@@ -58,6 +58,14 @@ class Result(BaseModel):
     num_correct_answers = models.PositiveSmallIntegerField(default=0)
     num_incorrect_answers = models.PositiveSmallIntegerField(default=0)
 
+
+    def save_raiting(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.state == Result.STATE.FINISHED:
+            self.user.raiting += self.balls()
+            self.user.save()
+
+
     def update_result(self, order_number, question, selected_choices):
         correct_choice = [choice.is_correct for choice in question.choices.all()]
         correct_answer = True
@@ -72,11 +80,14 @@ class Result(BaseModel):
 
         self.save()
 
+
     def time_of_test(self):
         return self.update_timestamp - self.create_timestamp
 
+
     def success_rate(self):
         return (self.num_correct_answers / (self.num_incorrect_answers + self.num_correct_answers)) * 100
+
 
     def balls(self):
         ball = self.num_correct_answers - self.num_incorrect_answers
@@ -85,3 +96,4 @@ class Result(BaseModel):
         else: ball = 0
 
         return  ball
+
