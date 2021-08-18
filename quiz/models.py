@@ -58,6 +58,12 @@ class Result(BaseModel):
     num_correct_answers = models.PositiveSmallIntegerField(default=0)
     num_incorrect_answers = models.PositiveSmallIntegerField(default=0)
 
+    def save_raiting(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.state == Result.STATE.FINISHED:
+            self.user.raiting += self.balls()
+            self.user.save()
+
     def update_result(self, order_number, question, selected_choices):
         correct_choice = [choice.is_correct for choice in question.choices.all()]
         correct_answer = True
