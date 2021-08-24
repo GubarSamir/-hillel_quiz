@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import MultipleObjectMixin
 
@@ -156,3 +156,32 @@ class ExamResultUpdateView(LoginRequiredMixin, UpdateView):
                 # 'order_number': result.current_order_number + 1,
             }
         ))
+
+
+class ExamResultDeleteView(LoginRequiredMixin, DeleteView):
+    def get(self, request, *args, **kwargs):
+        result_uuid = kwargs['result_uuid']
+        user = request.user
+
+        result = Result.objects.get(
+            user=user,
+            uuid=result_uuid
+        )
+        result.delete()
+
+        return HttpResponseRedirect(reverse('quizzes:result_list'))
+
+
+class ExamResultListView(LoginRequiredMixin, ListView):
+    model = Result
+    template_name = 'results/list.html'
+    context_object_name = 'results'
+    paginate_by = 5
+
+    def get_queryset(self):
+        user = self.request.user
+        return Result.objects.filter(user=user)
+
+
+
+

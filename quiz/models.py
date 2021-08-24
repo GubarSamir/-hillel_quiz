@@ -93,6 +93,4 @@ class Result(BaseModel):
 
         return  ball
 
-    def points(self):
-        # return max(0, self.num_correct_answers - self.num_incorrect_answers)
-        return self.num_correct_answers - self.num_incorrect_answers
+
