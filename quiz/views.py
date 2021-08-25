@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 from django.shortcuts import render
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import MultipleObjectMixin
@@ -103,9 +104,15 @@ class ExamQuestionView(LoginRequiredMixin, UpdateView):
 
         choices = ChoicesFormset(data=request.POST)
         selected_choices = ['is_selected' in form.changed_data for form in choices.forms]
-
-        result = Result.objects.get(uuid=result_uuid)
-        result.update_result(order_number, question, selected_choices)
+        if selected_choices.count(True) == 0:
+            messages.warning(request, 'Выберите один или несколько правильных ответов')
+            order_number = result.current_order_number
+        elif selected_choices.count(True) == len(selected_choices):
+            messages.warning(request, 'Все ответы не могут быть правильными')
+            order_number = result.current_order_number
+        else:
+            result = Result.objects.get(uuid=result_uuid)
+            result.update_result(order_number, question, selected_choices)
 
         if result.state == Result.STATE.FINISHED:
             return HttpResponseRedirect(reverse(
