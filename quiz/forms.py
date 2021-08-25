@@ -17,6 +17,7 @@ class ChoiceInlineFormSet(BaseInlineFormSet):
             raise ValidationError('Не могут быть все ответы правильными')
 
 
+
 class QuestionInlineFormSet(BaseInlineFormSet):
     def clean(self):
         if not (self.instance.QUESTION_MIN_LIMIT <= len(self.forms) <= self.instance.QUESTION_MAX_LIMIT):
@@ -37,7 +38,7 @@ class QuestionInlineFormSet(BaseInlineFormSet):
 
 
 class ChoiceForm(ModelForm):
-    is_selected = forms.BooleanField(required=False)
+    is_selected = forms.BooleanField(required=True)
 
     class Meta:
         model = Choice
